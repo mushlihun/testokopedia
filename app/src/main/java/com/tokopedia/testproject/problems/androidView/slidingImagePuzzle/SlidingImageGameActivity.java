@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tokopedia.testproject.R;
@@ -21,6 +24,7 @@ public class SlidingImageGameActivity extends AppCompatActivity {
     private String imageUrl;
     ImageView[][] imageViews = new ImageView[4][4];
     private GridLayout gridLayout;
+    private RelativeLayout loadingLayout;
 
     public static Intent getIntent(Context context, String imageUrl) {
         Intent intent = new Intent(context, SlidingImageGameActivity.class);
@@ -34,6 +38,7 @@ public class SlidingImageGameActivity extends AppCompatActivity {
         imageUrl = getIntent().getStringExtra(X_IMAGE_URL);
         setContentView(R.layout.activity_sliding_image_game);
         gridLayout = findViewById(R.id.gridLayout);
+        loadingLayout = findViewById(R.id.loadingLayout);
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (int i = 0; i < GRID_NO; i++) {
@@ -50,6 +55,7 @@ public class SlidingImageGameActivity extends AppCompatActivity {
             public void onSliceSuccess(List<Bitmap> bitmapList) {
                 //TODO will randomize placement to grid. Note: the game must be solvable.
                 //replace below implementation to your implementation.
+                setLoadingGone();
                 int counter = 0;
                 int bitmapSize = bitmapList.size();
                 for (int i = 0; i < GRID_NO; i++) {
@@ -63,10 +69,13 @@ public class SlidingImageGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSliceFailed(Throwable throwable) {
-                Toast.makeText(SlidingImageGameActivity.this,
-                        throwable.getMessage(), Toast.LENGTH_LONG).show();
+            public void onSliceFailed(String throwable) {
+                setLoadingGone();
+                new AlertDialog.Builder(SlidingImageGameActivity.this)
+                        .setTitle(null)
+                        .setMessage(throwable).show();
             }
+
         }, imageUrl);
 
         // TODO add implementation of the game.
@@ -77,5 +86,10 @@ public class SlidingImageGameActivity extends AppCompatActivity {
         // TODO add handling for rotation to save the user input.
         // If the device is rotated, it should retain user's input, so user can continue the game.
     }
+
+    private void setLoadingGone(){
+        loadingLayout.setVisibility(View.GONE);
+    }
+
 
 }
