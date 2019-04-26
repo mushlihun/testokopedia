@@ -32,7 +32,8 @@ public class BuchheimWalkerAlgorithm implements Algorithm {
     private int minNodeWidth = Integer.MAX_VALUE;
     private int maxNodeWidth = Integer.MIN_VALUE;
     private int maxNodeHeight = Integer.MIN_VALUE;
-
+    private Size size = new Size(0, 0);
+    
     public BuchheimWalkerAlgorithm(BuchheimWalkerConfiguration configuration) {
         this.configuration = configuration;
         edgeRenderer = new TreeEdgeRenderer(configuration);
@@ -347,6 +348,24 @@ public class BuchheimWalkerAlgorithm implements Algorithm {
         secondWalk(graph, firstNode, 0);
 
         positionNodes(graph);
+
+        calculateGraphSize(graph);
+    }
+
+    private void calculateGraphSize(Graph graph) {
+
+        int left = Integer.MAX_VALUE;
+        int top = Integer.MAX_VALUE;
+        int right = Integer.MIN_VALUE;
+        int bottom = Integer.MIN_VALUE;
+        for (Node node : graph.getNodes()) {
+            left = (int) Math.min(left, node.getX());
+            top = (int) Math.min(top, node.getY());
+            right = (int) Math.max(right, node.getX() + node.getWidth());
+            bottom = (int) Math.max(bottom, node.getY() + node.getHeight());
+        }
+
+        size = new Size(right - left, bottom - top);
     }
 
     private void positionNodes(Graph graph) {
