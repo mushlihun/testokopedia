@@ -33,7 +33,7 @@ public class BuchheimWalkerAlgorithm implements Algorithm {
     private int maxNodeWidth = Integer.MIN_VALUE;
     private int maxNodeHeight = Integer.MIN_VALUE;
     private Size size = new Size(0, 0);
-    
+
     public BuchheimWalkerAlgorithm(BuchheimWalkerConfiguration configuration) {
         this.configuration = configuration;
         edgeRenderer = new TreeEdgeRenderer(configuration);
